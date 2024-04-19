@@ -13,5 +13,11 @@ UCLASS()
 class L20240417_02_API ASamplePC : public APlayerController
 {
 	GENERATED_BODY()
-	
+public:
+	virtual void BeginPlay() override;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Input")
+	class UInputMappingContext* DefaultIMC;
+
+
 };

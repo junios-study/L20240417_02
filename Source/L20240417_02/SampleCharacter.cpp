@@ -5,6 +5,9 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "EnhancedInputComponent.h"
+#include "Kismet/KismetSystemLibrary.h"
+#include "Kismet/KismetMathLibrary.h"
 
 // Sets default values
 ASampleCharacter::ASampleCharacter()
@@ -44,5 +47,42 @@ void ASampleCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+	UEnhancedInputComponent* UIC = Cast<UEnhancedInputComponent>(PlayerInputComponent);
+	if (UIC)
+	{
+		UIC->BindAction(LookAction, ETriggerEvent::Triggered, this,
+			&ASampleCharacter::Look);
+
+		UIC->BindAction(MoveAction, ETriggerEvent::Triggered, this,
+			&ASampleCharacter::Move);
+
+		UIC->BindAction(JumpAction, ETriggerEvent::Triggered, this,
+			&ASampleCharacter::Jump);
+	}
+
+
+}
+
+void ASampleCharacter::Look(const FInputActionValue& Value)
+{
+	FVector2D Data = Value.Get<FVector2D>();
+
+	AddControllerYawInput(Data.X);
+	AddControllerPitchInput(Data.Y);
+
+}
+
+void ASampleCharacter::Move(const FInputActionValue& Value)
+{
+	FVector2D Data = Value.Get<FVector2D>();
+
+	const FRotator Rotation = GetControlRotation();
+	const FRotator ForwordRotation = FRotator(0, Rotation.Yaw, 0);
+	const FVector ForwordVector = UKismetMathLibrary::GetForwardVector(ForwordRotation);
+	const FVector RightVector = UKismetMathLibrary::GetRightVector(ForwordRotation);
+
+
+	AddMovementInput(ForwordVector, Data.Y);
+	AddMovementInput(RightVector, Data.X);
 }
 
