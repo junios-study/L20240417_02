@@ -20,6 +20,12 @@ public:
 
 	TObjectPtr<class ACharacter> MyPawn;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "stat")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "stat")
 	float Speed;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "stat")
+	float Direction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "stat")
+	bool bIsFalling;
 };

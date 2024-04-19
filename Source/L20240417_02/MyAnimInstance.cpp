@@ -4,6 +4,8 @@
 #include "MyAnimInstance.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "KismetAnimationLibrary.h"
+
 
 void UMyAnimInstance::NativeInitializeAnimation()
 {
@@ -19,6 +21,8 @@ void UMyAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	MyPawn = Cast<ACharacter>(TryGetPawnOwner());
 	if (MyPawn)
 	{
-		Speed = MyPawn->GetCharacterMovement()->Velocity.SizeSquared();
+		Direction = UKismetAnimationLibrary::CalculateDirection(MyPawn->GetCharacterMovement()->Velocity, MyPawn->GetControlRotation());
+		Speed = MyPawn->GetCharacterMovement()->Velocity.Size2D();
+		bIsFalling = MyPawn->GetCharacterMovement()->IsFalling();
 	}
 }
